@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//this script controls the player's movement
+
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField] int Speedbase;
@@ -78,20 +80,20 @@ public class PlayerControl : MonoBehaviour
 
     }
 
-    public void GotCaught()
+    public void GotCaught()//player caught in attack animation. loses game
     {
         Debug.Log("HIT");
         GetComponent<PlayerScoreScript>().OpenLoseScreen();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) // check what player has been hit by and respond accordingly
     {
-        if (other.gameObject.CompareTag("AttackHitBox"))
+        if (other.gameObject.CompareTag("AttackHitBox")) 
         {
-            GotCaught();
+            GotCaught(); // player was hit, end the game
         } else if (other.gameObject.CompareTag("Goal"))
         {
-            GetComponent<PlayerScoreScript>().UpScore();
+            GetComponent<PlayerScoreScript>().UpScore(); // player got a berry, increase score
             other.gameObject.SetActive(false);
         }
     }

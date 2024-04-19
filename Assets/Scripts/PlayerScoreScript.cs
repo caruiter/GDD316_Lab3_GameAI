@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+//this is a script for keeping track of the player's score and updating the UI
+
 public class PlayerScoreScript : MonoBehaviour
 {
     [SerializeField] GameObject tutorialPanel;
@@ -31,11 +33,11 @@ public class PlayerScoreScript : MonoBehaviour
         scoreText.text = "Berries: 0/15";
     }
 
-    public void UpScore()
+    public void UpScore() //player scores a point, update the score
     {
         score++;
         scoreText.text = "Berries: " + score + "/15";
-        if (score >= 15)
+        if (score >= 15) // check if player has enough points to win
         {
             OpenWinScreen();
         }

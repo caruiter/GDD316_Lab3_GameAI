@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//this is a behavior script for an agent searching for the player
+
 public class AgentSearchingState : AgentBaseState
 {
     public int check;
@@ -43,6 +45,7 @@ public class AgentSearchingState : AgentBaseState
             //theAgent.NavMeshAgent.SetDestination(theAgent.patrolPos);
         }**/
 
+        //if agent reaches destination, trigger animation and evaluate next move
         if (theAgent.NavMeshAgent.remainingDistance <= 0.2)
         {
             check++;
@@ -52,9 +55,10 @@ public class AgentSearchingState : AgentBaseState
     }
 
 
+    //find new area to search
     public void CheckNewArea(AgentController_FSM theAgent)
     {
-        if (check < 3)
+        if (check < 3) // limit on how long agent should stay in searching state before returning to idle
         {
             // CheckNewArea(theAgent);
             Vector3 aim = theAgent.alertArea;
@@ -64,10 +68,10 @@ public class AgentSearchingState : AgentBaseState
 
             theAgent.NavMeshAgent.SetDestination(aim);
 
-            Debug.Log("New search pos = " + aim);
+            //Debug.Log("New search pos = " + aim);
             theAgent.gameObject.transform.LookAt(aim);
         }
-        else
+        else // return to idle state if agent has checked 3 locations
         {
             theAgent.TransitionToState(theAgent.IdleState);
         }

@@ -1,5 +1,6 @@
 using UnityEngine;
 //This script is taken from Professor Luther's GAI_PathFSMexe example project
+//It acts as a base for the AI behaviors to branch from
 
 public abstract class AgentBaseState
 {

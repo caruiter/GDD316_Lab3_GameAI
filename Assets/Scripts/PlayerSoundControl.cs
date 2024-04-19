@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//this script controls the sound responses when the player collides with a hazard and evaluates what enemies it alerts
+
 public class PlayerSoundControl : MonoBehaviour
 {
     GameObject[] theEnemies;
@@ -15,9 +17,9 @@ public class PlayerSoundControl : MonoBehaviour
         theEnemies = GameObject.FindGameObjectsWithTag("Enemy");   
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision) //check what the player has collided with
     {
-        if (collision.gameObject.CompareTag("Hazard"))
+        if (collision.gameObject.CompareTag("Hazard")) // if player stepped on a hazard, evaluate sound vs distance of enemies
         {
             foreach(GameObject enemy in theEnemies)
             {
@@ -44,7 +46,7 @@ public class PlayerSoundControl : MonoBehaviour
         }
     }
 
-    public double GetSightRange()
+    public double GetSightRange() //returns sight range
     {
         return sightRange;
     }

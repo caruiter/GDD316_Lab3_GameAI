@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+//this is a behavior script for an idling agent
+
 public class AgentIdlingState : AgentBaseState
 {
-    bool wandering;
     Vector3 wanderSpot;
 
 
     public override void EnterState(AgentController_FSM theAgent)
     {
         Debug.Log("idling");
-        wandering = true;
         theAgent.MeshRenderer.material.color = Color.green;
         //theAgent.transform.position = theAgent.patrolPos;
         GetNewWanderPos(theAgent, theAgent.startPos);
@@ -32,33 +32,17 @@ public class AgentIdlingState : AgentBaseState
 
     public override void Update(AgentController_FSM theAgent)
     {
-        /**if(theAgent.transform.position.x == wanderSpot.x&& theAgent.transform.position.z == wanderSpot.z) //check if agent is at spot
+        if (theAgent.NavMeshAgent.remainingDistance <= 0.2) //when close to destination, trigger animation
         {
-            wandering = false;
             //trigger animation
             theAgent.anim.SetTrigger("IdleBob");
-            Debug.Log("IDLE BOB");
-
-        }**/
-        if (theAgent.NavMeshAgent.remainingDistance <= 0.2)
-        {
-            wandering = false;
-            //trigger animation
-            theAgent.anim.SetTrigger("IdleBob");
-            Debug.Log("IDLE BOB 2");
+            //Debug.Log("IDLE BOB 2");
 
         }
-        /**
-        if(wandering) //walk agent
-        {
-            //theAgent.transform.position += (theAgent.transform.forward * theAgent.agentSpeed * Time.deltaTime);
-        }
 
-        //theAgent.NavMeshAgent.SetDestination(theAgent.patrolPos);
-        //theAgent.TransitionToState(theAgent.PatrolState);
-        **/
     }
 
+    //find a new destination 
     public void GetNewWanderPos(AgentController_FSM theAgent, Vector3 startPos)
     {
         Vector3 aim = theAgent.startPos;
@@ -77,7 +61,7 @@ public class AgentIdlingState : AgentBaseState
             aim = Random.insideUnitSphere * (int)theAgent.wanderRadius;
             aim += theAgent.transform.position;
         }
-        Debug.Log("New wander pos = " + aim);
+        //Debug.Log("New wander pos = " + aim);
 
         theAgent.NavMeshAgent.SetDestination(aim);
         theAgent.gameObject.transform.LookAt(aim);

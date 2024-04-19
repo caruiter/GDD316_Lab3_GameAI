@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 //This script is adapted from Professor Luther's GAI_PathFSMexe example project
+//It acts as the base controller for the agent AI
 
 public class AgentController_FSM : MonoBehaviour
 {
@@ -64,7 +65,7 @@ public class AgentController_FSM : MonoBehaviour
         itself = this.gameObject;
     }
 
-    private void Start()
+    private void Start()//begin idling once woken up
     {
        TransitionToState(IdleState);
    
@@ -78,7 +79,7 @@ public class AgentController_FSM : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        currentState.OnCollisionEnter(this, collision);
+        currentState.OnCollisionEnter(this, collision); //on collision, trigger reaction in agent
     }
 
     public void TransitionToState(AgentBaseState state)
@@ -87,18 +88,18 @@ public class AgentController_FSM : MonoBehaviour
         currentState.EnterState(this);
     }
 
-    public void HeardNoise(Vector3 SoundPos)
+    public void HeardNoise(Vector3 SoundPos) // noise occurs within hearing range. agent begins searching
     {
         TransitionToState(SearchingState);
         SearchingState.alertArea = SoundPos;
     }
 
-    public void CaughtSight()
+    public void CaughtSight() // noise occurs within visible range. agent begins pursuing
     {
         TransitionToState(PursuitState);
     }
 
-    public void FinishedIdling()
+    public void FinishedIdling() // triggered through animation. agent finishes idling action at current goalpoint, finds next location
     {
         if(currentState == IdleState)
         {
@@ -107,22 +108,23 @@ public class AgentController_FSM : MonoBehaviour
         }
     }
 
-    public void FinishedSearchAnim()
+    public void FinishedSearchAnim() // triggered through animation. agent finishes searching animation at current goalpoint
     {
         if(currentState == SearchingState)
         {
+            //if player is within visible range, begin pursuit
             if (NavMeshAgent.remainingDistance <= player.GetComponent<PlayerSoundControl>().GetSightRange())
             {
                 TransitionToState(PursuitState);
             }
             else
-            {
+            { //find new area to search
                 SearchingState.CheckNewArea(this);
             }
         }
     }
 
-    public void FinishAttack()
+    public void FinishAttack() // attack is finished, evaluate next choice
     {
         /**double distance = Mathf.Sqrt(Mathf.Pow(transform.position.x - player.transform.position.x, 2) + Mathf.Pow(transform.position.z - player.transform.position.z, 2));
         if (distance <= player.GetComponent<PlayerSoundControl>().GetSightRange())
@@ -136,9 +138,9 @@ public class AgentController_FSM : MonoBehaviour
 
         if (NavMeshAgent.remainingDistance <= player.GetComponent<PlayerSoundControl>().GetSightRange())
         {
-            TransitionToState(PursuitState);
+            TransitionToState(PursuitState); //if player still within sight -> continue pursuing
         }
-        else
+        else // begin searching for player
         {
             TransitionToState(SearchingState);
         }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+//this is a behavior script for an agent pursuing the player
+
 public class AgentPursuitState : AgentBaseState
 {
     public override void EnterState(AgentController_FSM theAgent)
@@ -20,7 +22,7 @@ public class AgentPursuitState : AgentBaseState
 
     public override void OnCollisionEnter(AgentController_FSM theAgent, Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player")) //if player collides with agent, attack
         {
             theAgent.anim.SetTrigger("Attacking");
         }
@@ -36,7 +38,7 @@ public class AgentPursuitState : AgentBaseState
 
         }**/
 
-        if (theAgent.NavMeshAgent.remainingDistance <= 5f)
+        if (theAgent.NavMeshAgent.remainingDistance <= 5f) // if in range of player, attack
         {
 
             //begin attack anim
@@ -44,7 +46,7 @@ public class AgentPursuitState : AgentBaseState
         }
 
 
-
+        //update the agent's destination so it pursues player accurately
         theAgent.NavMeshAgent.SetDestination(theAgent.player.transform.position);
         theAgent.gameObject.transform.LookAt(theAgent.player.transform.position);
 
